@@ -1,5 +1,6 @@
 package io.github.fisher2911.deathcommands;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +27,11 @@ public class DeathListener implements Listener {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             commandInfos.forEach(commandInfo -> {
                 final CommandInfo.Type type = commandInfo.getType();
-                final String command = commandInfo.getCommand().replace("%player%", player.getName());
+                final String command = PlaceholderAPI.setPlaceholders(player,
+                        commandInfo.
+                                getCommand().
+                        replace("%player%",
+                                player.getName()));
 
                 switch (type) {
                     case PLAYER -> player.chat("/" + command);
