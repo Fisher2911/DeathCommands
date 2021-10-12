@@ -1,0 +1,4 @@
+name: DeathCommands
+main: io.github.fisher2911.deathcommands.DeathCommands
+version: 1.0.0
+api-version: 1.17

@@ -1,0 +1,7 @@
+commands:
+  permission:
+    command: "give @a diamond"
+    type: "PLAYER"
+  permission2:
+    command: "give %player% iron_ingot"
+    type: "CONSOLE"
