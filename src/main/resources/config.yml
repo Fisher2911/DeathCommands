@@ -1,7 +1,7 @@
 commands:
-  permission:
-    command: "give @a diamond"
-    type: "PLAYER"
-  permission2:
-    command: "give %player% iron_ingot"
-    type: "CONSOLE"
+  'permission': # The permission needed for the command to be run
+    command: "give @a diamond" # The command run when the player respawns
+    type: "PLAYER" # When set to PLAYER, the player will run the command
+  'permission.2': # Dots can be used in permissions
+    command: "give %player% iron_ingot" # %player% will return the player-that-died's name
+    type: "CONSOLE" # When set to CONSOLE, the console will run the command
