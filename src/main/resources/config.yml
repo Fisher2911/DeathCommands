@@ -1,7 +1,9 @@
 commands:
   permission:
     command: "give @a diamond"
+    event-type: "death"
     type: "PLAYER"
   permission2:
     command: "give %player% iron_ingot"
+    event-type: "respawn"
     type: "CONSOLE"

@@ -25,19 +25,37 @@ public class DeathListener implements Listener {
         final Set<CommandInfo> commandInfos = this.plugin.getAllowedCommands(player);
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            commandInfos.forEach(commandInfo -> {
-                final CommandInfo.Type type = commandInfo.getType();
-                final String command = PlaceholderAPI.setPlaceholders(player,
-                        commandInfo.
-                                getCommand().
-                        replace("%player%",
-                                player.getName()));
-
-                switch (type) {
-                    case PLAYER -> player.chat("/" + command);
-                    case CONSOLE -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-                }
-            });
+           listen(player, commandInfos, CommandInfo.EventType.RESPAWN);
         }, 1);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(final PlayerDeathEvent event) {
+        final Player player = event.getEntity();
+
+        final Set<CommandInfo> commandInfos = this.plugin.getAllowedCommands(player);
+
+        this.listen(player, commandInfos, CommandInfo.EventType.DEATH);
+}
+
+    private void listen(final Player player, final Set<CommandInfo> commandInfos, final CommandInfo.EventType eventType) {
+        commandInfos.forEach(commandInfo -> {
+
+            if (commandInfo.getEventType() != eventType) {
+                return;
+            }
+
+            final CommandInfo.Type type = commandInfo.getType();
+            final String command = PlaceholderAPI.setPlaceholders(player,
+                    commandInfo.
+                            getCommand().
+                            replace("%player%",
+                                    player.getName()));
+
+            switch (type) {
+                case PLAYER -> player.chat("/" + command);
+                case CONSOLE -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            }
+        });
     }
 }

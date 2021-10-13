@@ -5,6 +5,10 @@ import com.google.common.collect.Multimaps;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.permissions.Permission;
+import org.bukkit.permissions.PermissionAttachment;
+import org.bukkit.permissions.PermissionAttachmentInfo;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -42,31 +46,49 @@ public class DeathCommands extends JavaPlugin {
         for (final String key : section.getKeys(false)) {
 
             final String command = section.getString(key + ".command");
+            final String eventTypeString = section.getString(key + ".event-type");
             final String typeString = section.getString(key + ".type");
 
+            CommandInfo.EventType eventType;
             CommandInfo.Type type;
 
             try {
                 if (typeString == null) {
                     throw new IllegalArgumentException();
                 }
-                type = CommandInfo.Type.valueOf(typeString);
+                type = CommandInfo.Type.valueOf(typeString.toUpperCase());
             } catch (final IllegalArgumentException exception) {
                 type = CommandInfo.Type.CONSOLE;
             }
 
-            final CommandInfo commandInfo = new CommandInfo(command, type);
+            try {
+                if (eventTypeString == null) {
+                    throw new IllegalArgumentException();
+                }
+                eventType = CommandInfo.EventType.valueOf(eventTypeString.toUpperCase());
+            } catch (final IllegalArgumentException exception) {
+                eventType = CommandInfo.EventType.RESPAWN;
+            }
+
+            final CommandInfo commandInfo = new CommandInfo(command, eventType, type);
             this.deathMap.put(key, commandInfo);
         }
     }
 
     public Set<CommandInfo> getAllowedCommands(final CommandSender sender) {
         final Set<CommandInfo> commandInfos = new HashSet<>();
+        final Map<String, Boolean> permissions = new HashMap<>();
+        for (final PermissionAttachmentInfo attachment : sender.getEffectivePermissions()) {
+            permissions.put(attachment.getPermission(), attachment.getValue());
+        }
+
         for (final Map.Entry<String, CommandInfo> entry : this.deathMap.entries()) {
-            if (sender.hasPermission(entry.getKey())) {
+            final String permission = entry.getKey();
+            if (permissions.getOrDefault(permission, false)) {
                 commandInfos.add(entry.getValue());
             }
         }
+
         return commandInfos;
     }
 
