@@ -77,14 +77,10 @@ public class DeathCommands extends JavaPlugin {
 
     public Set<CommandInfo> getAllowedCommands(final CommandSender sender) {
         final Set<CommandInfo> commandInfos = new HashSet<>();
-        final Map<String, Boolean> permissions = new HashMap<>();
-        for (final PermissionAttachmentInfo attachment : sender.getEffectivePermissions()) {
-            permissions.put(attachment.getPermission(), attachment.getValue());
-        }
 
         for (final Map.Entry<String, CommandInfo> entry : this.deathMap.entries()) {
             final String permission = entry.getKey();
-            if (permissions.getOrDefault(permission, false)) {
+            if (sender.hasPermission(permission)) {
                 commandInfos.add(entry.getValue());
             }
         }
