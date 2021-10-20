@@ -1,9 +1,9 @@
-commands:
-  permission:
-    command: "give @a diamond"
-    event-type: "death"
-    type: "PLAYER"
+commands: # Do not remove this
+  permission: # The permission needed for the command to be run
+    command: "give @a diamond" # The command run when the player respawns, do not include the /
+    event-type: "DEATH" # When set to DEATH, the command will run right when the player dies
+    type: "PLAYER" # When set to PLAYER, the player will run the command
   permission2:
-    command: "give %player% iron_ingot"
-    event-type: "respawn"
-    type: "CONSOLE"
+    command: "give %player% iron_ingot" # %player% will return the player-that-died's name
+    event-type: "RESPAWN" # When set to RESPAWN, the command will run when the player respawns
+    type: "CONSOLE" # When set to CONSOLE, the console will run the command
